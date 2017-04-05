@@ -57,7 +57,7 @@ def fillDataframeFirstWords(companies_dataframe):
     return companies_dataframe
 
 def companyMailDataFrame(dataset):
-    companyMailDataFrame = pd.read_csv('../data/company_mailextension.csv',
+    companyMailDataFrame = pd.read_csv('../data/company_mailextension_new.csv',
                                        delimiter=',', error_bad_lines=False, encoding="ISO-8859-1")
 
     # add mail_extension for company 1

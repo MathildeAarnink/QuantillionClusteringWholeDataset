@@ -8,12 +8,18 @@ def Classifying_wholeDataset_main():
     combinations_companies_dataframe = MakeCompleteDataframe.makeCombinationsDataframe(unique_ordered_companies)
 
     combinations_companies_dataframe = MakeCompleteDataframe.fillDataframeFirstWords(combinations_companies_dataframe)
+
+    combinations_companies_dataframe = MakeCompleteDataframe.companyMailDataFrame(combinations_companies_dataframe)
     combinations_companies_dataframe = MakeCompleteDataframe.dummyVarJasper(combinations_companies_dataframe)
 
-    # combinations_companies_dataframe = MakeCompleteDataframe.companyMailDataFrame(combinations_companies_dataframe)
+    complete_df_with_values = Clustering.determineValues(combinations_companies_dataframe)
 
-    # complete_df_with values = Clustering.determineValues(combinations_companies_dataframe, True, "../data/CompleteDataFrame.csv")
+    
 
 
+
+
+    "../data/CompleteDataFrame.csv"
+    print(complete_df_with_values.head(10))
 
 Classifying_wholeDataset_main()

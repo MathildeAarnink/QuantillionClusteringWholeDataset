@@ -5,6 +5,7 @@ from sklearn import neural_network
 import jellyfish as jy
 from pyjarowinkler import distance
 from src import SignificanceCoefficients
+import pandas as pd
 
 
 def determineValues(dataframe, write_to_csv = False, filename = ''):
@@ -132,6 +133,12 @@ def classifier_logit(testing_set, X_training, X_testing, Y_training, Y_testing, 
     parameters, p_values = SignificanceCoefficients.significanceCoefficients(X_testing, fitted_function)
 
     predictions_training = logreg.predict(X_testing)
+    probabilities = logreg.predict_proba(X_testing)
+    list_probabilities = [testing_set[['Company 1', 'Company 2']].reset_index(drop=True),
+                          X_testing.reset_index(drop=True), Y_testing.reset_index(drop=True),
+                          pd.DataFrame(probabilities)]
+    dataframe_probabilities = pd.concat(list_probabilities, axis=1)
+
 
     correctly_predicted = 0
     falsely_predicted = 0
@@ -147,7 +154,7 @@ def classifier_logit(testing_set, X_training, X_testing, Y_training, Y_testing, 
                 print('classy:', pred)
                 print(companies)
 
-    return correctly_predicted, falsely_predicted, parameters , p_values
+    return correctly_predicted, falsely_predicted, parameters , p_values, dataframe_probabilities
 
 def classifier_random_forest(testing_set, X_training, X_testing,Y_training, Y_testing, printed = False): # add X_variables
 
