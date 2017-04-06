@@ -124,117 +124,71 @@ def determineValues(dataframe, write_to_csv = False, filename = ''):
 
     return dataframe
 
-def classifier_logit(testing_set, X_training, X_testing, Y_training, Y_testing, printed = False):
+def classifier_logit(fitted_logit, dataframe, X_name_variables, filename, writeToCSV = False):
 
-    logreg = linear_model.LogisticRegression()
-    fitted_function = logreg.fit(X_training, Y_training)
+    X_variables = dataframe[X_name_variables]
 
-    #Check the significance of the coefficients
-    parameters, p_values = SignificanceCoefficients.significanceCoefficients(X_testing, fitted_function)
+    predictions = fitted_logit.predict(X_variables)
+    probabilities = fitted_logit.predict_proba(X_variables)
 
-    predictions_training = logreg.predict(X_testing)
-    probabilities = logreg.predict_proba(X_testing)
-    list_probabilities = [testing_set[['Company 1', 'Company 2']].reset_index(drop=True),
-                          X_testing.reset_index(drop=True), Y_testing.reset_index(drop=True),
-                          pd.DataFrame(probabilities)]
+    list_probabilities = [dataframe[['Company_1_cleaned', 'Company_2_cleaned']].reset_index(drop=True),
+                          X_variables.reset_index(drop=True),
+                          pd.DataFrame(probabilities), pd.DataFrame(predictions)]
     dataframe_probabilities = pd.concat(list_probabilities, axis=1)
 
+    if writeToCSV:
+        dataframe_probabilities.to_csv(filename, sep = ";")
 
-    correctly_predicted = 0
-    falsely_predicted = 0
+    return dataframe_probabilities
 
-    for i in range(len(predictions_training)):
-        pred = predictions_training[i]
-        if pred == Y_testing.iloc[i]:
-            correctly_predicted += 1
-        else:
-            falsely_predicted += 1
-            companies = testing_set[['Company_1_cleaned', "Company_2_cleaned"]].iloc[i]
-            if printed:
-                print('classy:', pred)
-                print(companies)
+def classifier_random_forest(fitted_random_forest, dataframe, X_name_variables, filename, writeToCSV = False):
 
-    return correctly_predicted, falsely_predicted, parameters , p_values, dataframe_probabilities
+    X_variables = dataframe[X_name_variables]
 
-def classifier_random_forest(testing_set, X_training, X_testing,Y_training, Y_testing, printed = False): # add X_variables
+    predictions = fitted_random_forest.predict(X_variables)
+    probabilities = fitted_random_forest.predict_proba(X_variables)
 
-    forest = ensemble.RandomForestClassifier()
-    forest.fit(X_training, Y_training)
+    list_probabilities = [dataframe[['Company_1_cleaned', 'Company_2_cleaned']].reset_index(drop=True),
+                          X_variables.reset_index(drop=True),
+                          pd.DataFrame(probabilities), pd.DataFrame(predictions)]
+    dataframe_probabilities = pd.concat(list_probabilities, axis=1)
 
-    #Check the significance of the coefficients
-    parameters = [1 for col in X_training.columns.values]
-    p_values = [1 for col in X_training.columns.values]
+    if writeToCSV:
+        dataframe_probabilities.to_csv(filename, sep=";")
 
-    predictions_training = forest.predict(X_testing)
+    return dataframe_probabilities
 
-    correctly_predicted = 0
-    falsely_predicted = 0
+def classifier_supportvm(fitted_svm, dataframe, X_name_variables, filename, writeToCSV = False):
 
-    for i in range(len(predictions_training)):
-        pred = predictions_training[i]
-        if pred == Y_testing.iloc[i]:
-            correctly_predicted += 1
-        else:
-            falsely_predicted += 1
-            companies = testing_set[['Company_1_cleaned', "Company_2_cleaned"]].iloc[i]
-            if printed:
-                print('classy:', pred)
-                print(companies)
+    X_variables = dataframe[X_name_variables]
 
-    return correctly_predicted, falsely_predicted, parameters , p_values
+    predictions = fitted_svm.predict(X_variables)
+    probabilities = fitted_svm.predict_proba(X_variables)
 
-def classifier_supportvm(testing_set, X_training, X_testing,Y_training, Y_testing, printed = False): # add X_variables
+    list_probabilities = [dataframe[['Company_1_cleaned', 'Company_2_cleaned']].reset_index(drop=True),
+                          X_variables.reset_index(drop=True),
+                          pd.DataFrame(probabilities), pd.DataFrame(predictions)]
+    dataframe_probabilities = pd.concat(list_probabilities, axis=1)
 
-    supportvm = svm.SVC()
-    supportvm.fit(X_training, Y_training)
+    if writeToCSV:
+        dataframe_probabilities.to_csv(filename, sep=";")
 
-    #Check the significance of the coefficients
-    parameters = [1 for col in X_training.columns.values]
-    p_values = [1 for col in X_training.columns.values]
+    return dataframe_probabilities
 
-    predictions_training = supportvm.predict(X_testing)
+def classifier_neuralnet(fitted_neuralnet, dataframe, X_name_variables, filename, writeToCSV = False):
 
-    correctly_predicted = 0
-    falsely_predicted = 0
+    X_variables = dataframe[X_name_variables]
 
-    for i in range(len(predictions_training)):
-        pred = predictions_training[i]
-        if pred == Y_testing.iloc[i]:
-            correctly_predicted += 1
-        else:
-            falsely_predicted += 1
-            companies = testing_set[['Company_1_cleaned', "Company_2_cleaned"]].iloc[i]
-            if printed:
-                print('classy:', pred)
-                print(companies)
+    predictions = fitted_neuralnet.predict(X_variables)
+    probabilities = fitted_neuralnet.predict_proba(X_variables)
 
-    return correctly_predicted, falsely_predicted, parameters , p_values
+    list_probabilities = [dataframe[['Company_1_cleaned', 'Company_2_cleaned']].reset_index(drop=True),
+                          X_variables.reset_index(drop=True),
+                          pd.DataFrame(probabilities), pd.DataFrame(predictions)]
+    dataframe_probabilities = pd.concat(list_probabilities, axis=1)
 
-def classifier_neuralnet(testing_set, X_training, X_testing, Y_training, Y_testing, printed = False): # add X_variables
+    if writeToCSV:
+        dataframe_probabilities.to_csv(filename, sep=";")
 
-    neuralnet = neural_network.MLPClassifier(hidden_layer_sizes = (40,2))
-    neuralnet.fit(X_training, Y_training)
-
-    #Check the significance of the coefficients
-    parameters = [1 for col in X_training.columns.values]
-    p_values = [1 for col in X_training.columns.values]
-
-    predictions_training = neuralnet.predict(X_testing)
-
-    correctly_predicted = 0
-    falsely_predicted = 0
-
-    for i in range(len(predictions_training)):
-        pred = predictions_training[i]
-        if pred == Y_testing.iloc[i]:
-            correctly_predicted += 1
-        else:
-            falsely_predicted += 1
-            companies = testing_set[['Company_1_cleaned', "Company_2_cleaned"]].iloc[i]
-            if printed:
-                print('classy:', pred)
-                print(companies)
-
-    return correctly_predicted, falsely_predicted, parameters , p_values
-
+    return dataframe_probabilities
 

@@ -99,3 +99,21 @@ def dummyVarJasper(dataframe):
 
     dataframe['Dummy_companyname_in_other_companyname'] = dummy_variable
     return dataframe
+
+def dummyVarJasper2(dataframe):
+
+    dummy_variable = []
+    for i in range(len(dataframe)):
+        c1 = dataframe["Company_1_cleaned"].iloc[i]
+        c2 = dataframe["Company_2_cleaned"].iloc[i]
+
+        c1 = c1.replace(" ", "")
+        c2 = c2.replace(" ", "")
+
+        if c1 == c2:
+            dummy_variable.append(1)
+        else:
+            dummy_variable.append(0)
+
+    dataframe['Dummy2'] = dummy_variable
+    return dataframe

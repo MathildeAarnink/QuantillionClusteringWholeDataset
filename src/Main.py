@@ -1,5 +1,6 @@
 from src import MakeCompleteDataframe
 from src import Clustering
+import pickle
 
 
 def Classifying_wholeDataset_main():
@@ -11,15 +12,21 @@ def Classifying_wholeDataset_main():
 
     combinations_companies_dataframe = MakeCompleteDataframe.companyMailDataFrame(combinations_companies_dataframe)
     combinations_companies_dataframe = MakeCompleteDataframe.dummyVarJasper(combinations_companies_dataframe)
+    combinations_companies_dataframe = MakeCompleteDataframe.dummyVarJasper2(combinations_companies_dataframe)
 
     complete_df_with_values = Clustering.determineValues(combinations_companies_dataframe)
 
-    
+    #load the classifier:
+    with open("../data/dumped_classifier_randomforest.pkl", 'rb') as fid:
+        forest_loaded = pickle.load(fid)
+
+    X_variables_names_forest = ["Soundex_val","sameMail", "Dummy_companyname_in_other_companyname", "Dummy2"]
+
+    result_dataframe_forest = Clustering.classifier_random_forest(forest_loaded,complete_df_with_values, X_variables_names_forest,
+                                '../data/Results_WholeDataset_forest.csv' , writeToCSV= True)
 
 
 
 
-    "../data/CompleteDataFrame.csv"
-    print(complete_df_with_values.head(10))
 
 Classifying_wholeDataset_main()
