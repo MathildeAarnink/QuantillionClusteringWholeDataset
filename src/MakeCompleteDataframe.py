@@ -77,8 +77,17 @@ def companyMailDataFrame(dataset):
     dataset['mail_extension_2'] = dataset['mail_extension']
     del dataset['company']
     del dataset['mail_extension']
-    dataset['sameMail'] = 1 * (
-    dataset['mail_extension_1'] == dataset['mail_extension_2'])
+    dataset['sameMail'] = 2*(dataset['mail_extension_1'] == dataset['mail_extension_2'])
+    dataset['mail_extension_1'] = dataset['mail_extension_1'].fillna('')
+    dataset['mail_extension_2'] = dataset['mail_extension_2'].fillna('')
+    dataset['sameMail'].loc[dataset['mail_extension_1'] == ''] = 1
+    dataset['sameMail'].loc[dataset['mail_extension_2'] == ''] = 1
+    dataset['sameMail'] = dataset['sameMail'] - 1
+
+    #del cleaned_fuzzy_data_set['mail_extension_1']
+    #del cleaned_fuzzy_data_set['mail_extension_2']
+
+    # del dataset['Unnamed: 0.1']
 
     return dataset
 

@@ -20,10 +20,10 @@ def Classifying_wholeDataset_main():
     with open("../data/dumped_classifier_randomforest.pkl", 'rb') as fid:
         forest_loaded = pickle.load(fid)
 
-    X_variables_names_forest = ["Soundex_val","sameMail", "Dummy_companyname_in_other_companyname", "Dummy2"]
+    X_variables_names_forest = ["Jaro_val_first_word","sameMail", "Dummy_companyname_in_other_companyname", "Dummy2"]
 
     result_dataframe_forest = Clustering.classifier_random_forest(forest_loaded,complete_df_with_values, X_variables_names_forest,
-                                '../data/Results_WholeDataset_forest.csv' , writeToCSV= True)
+                                '../data/Results_WholeDataset_forest2.csv' , writeToCSV= True)
 
 
 
